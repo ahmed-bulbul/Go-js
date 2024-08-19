@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoJS Diagram</title>
+    <script src="https://unpkg.com/gojs/release/go.js"></script>
+    <style>
+        #myDiagramDiv {
+            width: 100%;
+            height: 600px;
+            border: solid 1px black;
+        }
+    </style>
+</head>
+<body>
+    <div id="myDiagramDiv"></div>
+    <script>
+        // Set the GoJS license key
+        go.LicenseKey = "YOUR_LICENSE_KEY_HERE";
+
+        function init() {
+            var $ = go.GraphObject.make;  // For conciseness in defining templates
+
+            var myDiagram = $(go.Diagram, "myDiagramDiv",  // Create the Diagram
+                {
+                    "undoManager.isEnabled": true,
+                    layout: $(go.TreeLayout, { angle: 90, layerSpacing: 35 })
+                });
+
+            // Define a simple Node template
+            myDiagram.nodeTemplate =
+                $(go.Node, "Auto",
+                    $(go.Shape, "RoundedRectangle",
+                        new go.Binding("fill", "backgroundColor"),
+                        new go.Binding("stroke", "borderColor"),
+                        new go.Binding("strokeWidth", "borderWidth")),
+                    $(go.TextBlock,
+                        { margin: 8 },
+                        new go.Binding("text", "text"))
+                );
+
+            // Define link template (optional)
+            myDiagram.linkTemplate =
+                $(go.Link,
+                    $(go.Shape),  // the link shape
+                    $(go.Shape, { toArrow: "OpenTriangle" })  // arrowhead
+                );
+
+            // Load the JSON data into the diagram
+            myDiagram.model = new go.GraphLinksModel(
+                [
+                    { "key": "o-7", "text": "Objective 7", "backgroundColor": "#b4cfc6", "borderColor": "#000000", "borderWidth": 1 },
+                    { "key": "o-6", "text": "Lorem Ipsum is simply dummy text", "backgroundColor": "#39deea", "borderColor": "#000000", "borderWidth": 1 },
+                    { "key": "o-5", "text": "Objective 5", "backgroundColor": "#bde5c0", "borderColor": "#000000", "borderWidth": 2 },
+                    { "key": "o-8", "text": "Objective 8", "backgroundColor": "#e70d0d", "borderColor": "#000000", "borderWidth": 1 },
+                    { "key": "o-18", "text": "NAME", "backgroundColor": "#CCCCFF", "borderColor": "gray", "borderWidth": 1 },
+                    { "key": "0", "text": "Objective Group 2", "backgroundColor": "#bfd0e3", "borderColor": "#e4e4e4", "borderWidth": 1 }
+                ],
+                [
+                    { "from": "o-7", "to": "o-6" },
+                    { "from": "o-7", "to": "o-5" },
+                    { "from": "o-7", "to": "o-8" },
+                    { "from": "o-7", "to": "o-18" },
+                    { "from": "o-7", "to": "0" }
+                ]
+            );
+        }
+
+        // Initialize the diagram after the page is fully loaded
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
