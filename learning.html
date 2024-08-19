@@ -25,7 +25,7 @@
             var myDiagram = $(go.Diagram, "myDiagramDiv",  // Create the Diagram
                 {
                     "undoManager.isEnabled": true,
-                    layout: $(go.TreeLayout, { angle: 90, layerSpacing: 35 })
+                    layout: $(go.TreeLayout, { angle: 90, layerSpacing: 35, isInitial: false })
                 });
 
             // Define a simple Node template
@@ -50,12 +50,12 @@
             // Load the JSON data into the diagram
             myDiagram.model = new go.GraphLinksModel(
                 [
-                    { "key": "o-7", "text": "Objective 7", "backgroundColor": "#b4cfc6", "borderColor": "#000000", "borderWidth": 1 },
-                    { "key": "o-6", "text": "Lorem Ipsum is simply dummy text", "backgroundColor": "#39deea", "borderColor": "#000000", "borderWidth": 1 },
-                    { "key": "o-5", "text": "Objective 5", "backgroundColor": "#bde5c0", "borderColor": "#000000", "borderWidth": 2 },
-                    { "key": "o-8", "text": "Objective 8", "backgroundColor": "#e70d0d", "borderColor": "#000000", "borderWidth": 1 },
-                    { "key": "o-18", "text": "NAME", "backgroundColor": "#CCCCFF", "borderColor": "gray", "borderWidth": 1 },
-                    { "key": "0", "text": "Objective Group 2", "backgroundColor": "#bfd0e3", "borderColor": "#e4e4e4", "borderWidth": 1 }
+                    { "key": "o-7", "text": "Objective 7", "backgroundColor": "#b4cfc6", "borderColor": "#000000", "borderWidth": 1, "loc": "0 0" },
+                    { "key": "o-6", "text": "Lorem Ipsum is simply dummy text", "backgroundColor": "#39deea", "borderColor": "#000000", "borderWidth": 1, "loc": "200 100" },
+                    { "key": "o-5", "text": "Objective 5", "backgroundColor": "#bde5c0", "borderColor": "#000000", "borderWidth": 2, "loc": "400 50" },
+                    { "key": "o-8", "text": "Objective 8", "backgroundColor": "#e70d0d", "borderColor": "#000000", "borderWidth": 1, "loc": "600 150" },
+                    { "key": "o-18", "text": "NAME", "backgroundColor": "#CCCCFF", "borderColor": "gray", "borderWidth": 1, "loc": "800 0" },
+                    { "key": "0", "text": "Objective Group 2", "backgroundColor": "#bfd0e3", "borderColor": "#e4e4e4", "borderWidth": 1, "loc": "1000 180" }
                 ],
                 [
                     { "from": "o-7", "to": "o-6" },
@@ -65,6 +65,15 @@
                     { "from": "o-7", "to": "0" }
                 ]
             );
+
+            // Set the positions of the nodes according to their loc properties
+            myDiagram.nodes.each(function(node) {
+                var loc = node.data.loc;
+                if (loc) {
+                    var parts = loc.split(' ');
+                    node.position = new go.Point(parseFloat(parts[0]), parseFloat(parts[1]));
+                }
+            });
         }
 
         // Initialize the diagram after the page is fully loaded
